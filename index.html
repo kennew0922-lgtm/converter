@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socrarius System - Uppercase Converter</title>
+    <style>
+        /* 🟣 全体背景＆サイバーSAOスタイル */
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #0d0614;
+            color: #e0d0ff;
+            font-family: 'Segoe UI', Consolas, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 90vh;
+        }
+
+        .converter-card {
+            width: 650px;
+            max-width: 90vw;
+            background: rgba(20, 8, 35, 0.85);
+            border: 2px solid #9370db;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 0 20px rgba(147, 112, 219, 0.4), inset 0 0 10px rgba(147, 112, 219, 0.2);
+        }
+
+        .header-title {
+            text-align: center;
+            font-size: 1.4rem;
+            letter-spacing: 3px;
+            color: #d8bfd8;
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-shadow: 0 0 8px rgba(216, 191, 216, 0.8);
+            border-bottom: 1px solid rgba(177, 156, 217, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .field-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            color: #b19cd9;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        /* 🟣 テキストエリア（入力＆出力） */
+        textarea {
+            width: 100%;
+            height: 120px;
+            background: rgba(10, 3, 18, 0.9);
+            border: 1px solid #ba55d3;
+            border-radius: 6px;
+            color: #00ffcc; /* サイバー感のある発光グリーン/シアン */
+            font-family: 'Consolas', monospace;
+            font-size: 1rem;
+            padding: 12px;
+            box-sizing: border-box;
+            resize: vertical;
+            outline: none;
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.8);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        textarea:focus {
+            border-color: #00ffcc;
+            box-shadow: 0 0 12px rgba(0, 255, 204, 0.4);
+        }
+
+        /* 🟣 コピー完了ボタン（SAO風UI） */
+        .btn-copy {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #4b008280, #8a2be280);
+            border: 1px solid #ba55d3;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(138, 43, 226, 0.4);
+        }
+
+        .btn-copy:hover {
+            background: linear-gradient(135deg, #6a0dad, #9932cc);
+            box-shadow: 0 0 18px rgba(186, 85, 211, 0.8);
+            transform: translateY(-2px);
+        }
+
+        .btn-copy:active {
+            transform: translateY(0);
+        }
+
+        /* コピー通知ポップ */
+        .toast {
+            text-align: center;
+            height: 20px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: #00ffcc;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="converter-card">
+        <div class="header-title">SYSTEM CODE: UPPERCASE CONVERTER</div>
+
+        <!-- 1. 入力エリア -->
+        <div class="field-group">
+            <label>▼ INPUT (Original Text / Multiple Lines Allowed)</label>
+            <textarea id="inputText" placeholder="Type or paste text here... (e.g. Cloudia Magic)" oninput="convertToUpper()"></textarea>
+        </div>
+
+        <!-- 2. 出力エリア（大文字自動変換） -->
+        <div class="field-group">
+            <label>▼ OUTPUT (ALL UPPERCASE / Auto Converted)</label>
+            <textarea id="outputText" readonly placeholder="UPPERCASE RESULT WILL APPEAR HERE..."></textarea>
+        </div>
+
+        <!-- 3. コピーボタン -->
+        <button class="btn-copy" onclick="copyToClipboard()">COPY TO CLIPBOARD</button>
+        <div class="toast" id="toastMsg">SYSTEM: COPIED TO CLIPBOARD!</div>
+    </div>
+
+    <script>
+        // 🌸 入力された瞬間にリアルタイムで大文字に変換する魔法の関数
+        function convertToUpper() {
+            const input = document.getElementById("inputText").value;
+            // .toUpperCase() で一瞬で大文字化！改行もそのまま保持されるよ🌸
+            document.getElementById("outputText").value = input.toUpperCase();
+        }
+
+        // 🌸 ワンタップでクリップボードにコピーする関数
+        function copyToClipboard() {
+            const outputText = document.getElementById("outputText");
+            if (!outputText.value) return;
+
+            navigator.clipboard.writeText(outputText.value).then(() => {
+                const toast = document.getElementById("toastMsg");
+                toast.classList.add("show");
+                setTimeout(() => {
+                    toast.classList.remove("show");
+                }, 2000);
+            });
+        }
+    </script>
+
+</body>
+</html>
