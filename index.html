@@ -8,8 +8,8 @@
         /* 🟣 全体背景＆サイバーSAOスタイル */
         body {
             margin: 0;
-            padding: 20px;
-            background-color: #0d0614;
+            padding: 0px;
+            background-image: url("https://socrarius-tool.com/converter/back.webp"); /* 画像のファイルパスかURLを指定 */
             color: #e0d0ff;
             font-family: 'Segoe UI', Consolas, monospace;
             display: flex;
@@ -57,7 +57,7 @@
         textarea {
             width: 100%;
             height: 120px;
-            background: rgba(10, 3, 18, 0.9);
+            background: rgba(10, 3, 18, 0.5);
             border: 1px solid #ba55d3;
             border-radius: 6px;
             color: #00ffcc; /* サイバー感のある発光グリーン/シアン */
@@ -116,9 +116,52 @@
         .toast.show {
             opacity: 1;
         }
+
+/* ==================== Cloudiaさんの画像 ==================== */
+.cloudia {
+  text-align: center;
+  margin: 20px auto 20px auto;
+  max-width: 800px;
+  transition: all 0.5s ease;
+}
+
+.cloudia img {
+  /* 🌸 優しさと洗練さを両立する角丸設定 */
+  border-radius: 14px; 
+  width: auto; 
+  height: 150px; 
+  
+  /* 🌸 メインカードの背景（ダークパープル）と馴染ませる重厚な枠線 */
+  border: 3px solid rgba(147, 112, 219, 0.6); 
+
+  /* 🌸 ネオンパープル ＆ 奥行きを与える内側・外側のダブる光彩ボカシ */
+  box-shadow: 
+    0 0 20px rgba(147, 112, 219, 0.5),         /* 外側：紫のネオン発光 */
+    0 0 40px rgba(138, 43, 226, 0.25),        /* 外側：広範囲に広がる柔らかい深紫のぼかし */
+    inset 0 0 12px rgba(0, 255, 204, 0.3);     /* 内側：サイバーシアンのアクセント光彩 */
+  
+  transition: box-shadow 0.4s ease, border-color 0.4s ease, transform 0.4s ease;
+}
+
+/* 🌸 ホバー時にふわっとオーラが強まる演出 
+.cloudia img:hover {
+  border-color: rgba(0, 255, 204, 0.8);      
+  transform: translateY(-2px);                
+  box-shadow: 
+    0 0 30px rgba(186, 85, 211, 0.8),       
+    0 0 50px rgba(0, 255, 204, 0.4),         
+    inset 0 0 15px rgba(0, 255, 204, 0.5);
+}*/
+
+
     </style>
 </head>
 <body>
+
+       </div>
+   <div class="cloudia">
+       <img src="https://socrarius-tool.com/converter/cloudia.webp">
+   </div>
 
     <div class="converter-card">
         <div class="header-title">SYSTEM CODE: UPPERCASE CONVERTER</div>
