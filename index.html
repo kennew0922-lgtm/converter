@@ -183,28 +183,32 @@
         <div class="toast" id="toastMsg">SYSTEM: COPIED TO CLIPBOARD!</div>
     </div>
 
-    <script>
-        // 🌸 入力された瞬間にリアルタイムで大文字に変換する魔法の関数
-        function convertToUpper() {
-            const input = document.getElementById("inputText").value;
-            // .toUpperCase() で一瞬で大文字化！改行もそのまま保持されるよ🌸
-            document.getElementById("outputText").value = input.toUpperCase();
-        }
+<script>
+    // 🌸 入力された瞬間にリアルタイムで大文字に変換する魔法の関数
+    function convertToUpper() {
+        const input = document.getElementById("inputText").value;
+        // .toUpperCase() で一瞬で大文字化！改行もそのまま保持されるよ🌸
+        document.getElementById("outputText").value = input.toUpperCase();
+    }
 
-        // 🌸 ワンタップでクリップボードにコピーする関数
-        function copyToClipboard() {
-            const outputText = document.getElementById("outputText");
-            if (!outputText.value) return;
+    // 🌸 ワンタップでクリップボードにコピーする関数（音演出付き✨）
+    function copyToClipboard() {
+        const outputText = document.getElementById("outputText");
+        if (!outputText.value) return;
 
-            navigator.clipboard.writeText(outputText.value).then(() => {
-                const toast = document.getElementById("toastMsg");
-                toast.classList.add("show");
-                setTimeout(() => {
-                    toast.classList.remove("show");
-                }, 2000);
-            });
-        }
-    </script>
+        // ★追加：GitHubに置いたサイバー効果音を再生する魔法！
+        const audio = new Audio("cyber-.mp3"); 
+        audio.play().catch(e => console.log("Audio play error:", e));
+
+        navigator.clipboard.writeText(outputText.value).then(() => {
+            const toast = document.getElementById("toastMsg");
+            toast.classList.add("show");
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 2000);
+        });
+    }
+</script>
 
 </body>
 </html>
