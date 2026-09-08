@@ -3,31 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Socrarius System - Uppercase Converter</title>
+    <title>Socrarius System - Converter & Diff Inspector</title>
     <style>
         /* 🟣 全体背景＆サイバーSAOスタイル */
         body {
             margin: 0;
-            padding: 0px;
+            padding: 20px 0;
             background-color: #0c1425;
-            background-image: url("https://socrarius-tool.com/converter/back.webp"); /* 画像のファイルパスかURLを指定 */
+            background-image: url("https://socrarius-tool.com/converter/back.webp");
             color: #e0d0ff;
             font-family: 'Segoe UI', Consolas, monospace;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             min-height: 90vh;
         }
 
         .converter-card {
-            width: 650px;
-            max-width: 90vw;
+            width: 850px;
+            max-width: 92vw;
             background: rgba(20, 8, 35, 0.85);
             border: 2px solid #9370db;
             border-radius: 12px;
             padding: 25px;
             box-shadow: 0 0 20px rgba(147, 112, 219, 0.4), inset 0 0 10px rgba(147, 112, 219, 0.2);
+            margin-bottom: 25px;
         }
 
         .header-title {
@@ -61,9 +62,9 @@
             background: rgba(10, 3, 18, 0.5);
             border: 1px solid #ba55d3;
             border-radius: 6px;
-            color: #00ffcc; /* サイバー感のある発光グリーン/シアン */
+            color: #00ffcc;
             font-family: 'Consolas', monospace;
-            font-size: 1rem;
+            font-size: 0.95rem;
             padding: 12px;
             box-sizing: border-box;
             resize: vertical;
@@ -77,7 +78,7 @@
             box-shadow: 0 0 12px rgba(0, 255, 204, 0.4);
         }
 
-        /* 🌸 ★新機能：リアルタイム文字数カウンター用CSS */
+        /* 🌸 ★リアルタイム文字数カウンター用CSS */
         .char-count-box {
             display: flex;
             justify-content: space-around;
@@ -100,7 +101,7 @@
             display: block;
             font-size: 1.2rem;
             font-weight: bold;
-            color: #00ffcc; /* 発光グリーン */
+            color: #00ffcc;
             text-shadow: 0 0 6px rgba(0, 255, 204, 0.6);
             margin-top: 2px;
         }
@@ -127,10 +128,6 @@
             transform: translateY(-2px);
         }
 
-        .btn-copy:active {
-            transform: translateY(0);
-        }
-
         /* コピー通知ポップ */
         .toast {
             text-align: center;
@@ -149,21 +146,77 @@
         /* ==================== Cloudiaさんの画像 ==================== */
         .cloudia {
             text-align: center;
-            margin: 20px auto 20px auto;
+            margin: 10px auto 15px auto;
             max-width: 800px;
-            transition: all 0.5s ease;
         }
 
         .cloudia img {
             border-radius: 14px; 
             width: auto; 
-            height: 150px; 
+            height: 140px; 
             border: 3px solid rgba(147, 112, 219, 0.6); 
-            box-shadow: 
-                0 0 20px rgba(147, 112, 219, 0.5),
-                0 0 40px rgba(138, 43, 226, 0.25),
-                inset 0 0 12px rgba(0, 255, 204, 0.3);
-            transition: box-shadow 0.4s ease, border-color 0.4s ease, transform 0.4s ease;
+            box-shadow: 0 0 20px rgba(147, 112, 219, 0.5), 0 0 40px rgba(138, 43, 226, 0.25);
+        }
+
+        /* 🌸★ 新設：DIFF INSPECTOR (差分検出) 専用スタイル ★🌸 */
+        .diff-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .diff-textarea {
+            height: 150px;
+        }
+
+        /* 差分ビューア表示領域 */
+        .diff-output-container {
+            background: rgba(5, 1, 10, 0.85);
+            border: 1px solid #00ffcc;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 300px;
+            overflow-y: auto;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.9);
+            color: #a0a0a0;
+        }
+
+        /* 差分ハイライトカラー（サイバー発光） */
+        .diff-added {
+            background-color: rgba(0, 255, 204, 0.25);
+            color: #00ffcc;
+            font-weight: bold;
+            border-radius: 3px;
+            padding: 0 3px;
+            text-shadow: 0 0 5px rgba(0, 255, 204, 0);
+        }
+
+        .diff-removed {
+            background-color: rgba(255, 0, 100, 0.3);
+            color: #ff3377;
+            text-decoration: line-through;
+            font-weight: bold;
+            border-radius: 3px;
+            padding: 0 3px;
+            text-shadow: 0 0 5px rgba(255, 0, 100, 0);
+        }
+
+        .diff-summary {
+            font-size: 0.85rem;
+            color: #b19cd9;
+            margin-bottom: 8px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .diff-summary span {
+            font-weight: bold;
         }
     </style>
 </head>
@@ -173,22 +226,45 @@
         <img src="https://socrarius-tool.com/converter/cloudia.webp" alt="Cloudia">
     </div>
 
+        <!-- 🌸 2. 新設：コード差分抽出カード (DIFF INSPECTOR) 🌸 -->
+    <div class="converter-card">
+        <div class="header-title">SYSTEM CODE: CODE DIFF INSPECTOR</div>
+
+        <div class="diff-grid">
+            <div>
+                <label>▼ OLD CODE (比較元の古いコード)</label>
+                <textarea id="oldCode" class="diff-textarea" placeholder="Paste OLD code here..." oninput="compareCodes()"></textarea>
+            </div>
+            <div>
+                <label>▼ NEW CODE (比較先の新しいコード)</label>
+                <textarea id="newCode" class="diff-textarea" placeholder="Paste NEW code here..." oninput="compareCodes()"></textarea>
+            </div>
+        </div>
+
+        <div class="field-group">
+            <div class="diff-summary">
+                <span>▼ DIFFERENCE DETECTED (差分ハイライト結果):</span>
+                <span style="color:#00ffcc;">■ 追加/変更 (Green)</span>
+                <span style="color:#ff3377;">■ 削除 (Pink)</span>
+            </div>
+            <div id="diffViewer" class="diff-output-container">Paste codes above to detect differences...</div>
+        </div>
+    </div>
+
+    <!-- 1. 変換＆文字数抽出カード -->
     <div class="converter-card">
         <div class="header-title">SYSTEM CODE: UPPERCASE CONVERTER</div>
 
-        <!-- 1. 入力エリア -->
         <div class="field-group">
             <label>▼ INPUT (Original Text / Multiple Lines Allowed)</label>
             <textarea id="inputText" placeholder="Type or paste text here... (e.g. Cloudia Magic)" oninput="convertToUpper()"></textarea>
         </div>
 
-        <!-- 2. 出力エリア（大文字自動変換） -->
         <div class="field-group">
             <label>▼ OUTPUT (ALL UPPERCASE / Auto Converted)</label>
             <textarea id="outputText" readonly placeholder="UPPERCASE RESULT WILL APPEAR HERE..."></textarea>
         </div>
 
-        <!-- 🌸 ★新機能：リアルタイムカウンター表示エリア -->
         <div class="char-count-box">
             <div class="count-item">
                 CHARS (WITH SPACE)
@@ -204,41 +280,32 @@
             </div>
         </div>
 
-        <!-- 3. コピーボタン -->
         <button class="btn-copy" onclick="copyToClipboard()">COPY TO CLIPBOARD</button>
         <div class="toast" id="toastMsg">SYSTEM: COPIED TO CLIPBOARD!</div>
     </div>
 
+
+
 <script>
-    // 🌸 入力された瞬間にリアルタイムで大文字変換＆文字数カウントを実行する魔法！
+    // 🌸 1. 大文字変換＆文字数カウント関数
     function convertToUpper() {
         const input = document.getElementById("inputText").value;
-        
-        // 1. .toUpperCase() で一瞬で大文字化！
         document.getElementById("outputText").value = input.toUpperCase();
 
-        // 2. 🌸 ★文字数カウントロジック
-        // 全文字数（スペース・改行含む）
         const countWithSpace = input.length;
-        
-        // スペース・タブ・改行を除いた純粋な文字数
         const countNoSpace = input.replace(/\s/g, "").length;
-        
-        // 行数（文字が入っていれば改行数+1、空なら0）
         const lines = input ? input.split("\n").length : 0;
 
-        // UIへ数値を反映！
         document.getElementById("charWithSpace").textContent = countWithSpace.toLocaleString();
         document.getElementById("charNoSpace").textContent = countNoSpace.toLocaleString();
         document.getElementById("lineCount").textContent = lines.toLocaleString();
     }
 
-    // 🌸 ワンタップでクリップボードにコピーする関数（音演出付き✨）
+    // 🌸 2. ワンタップでコピーする関数
     function copyToClipboard() {
         const outputText = document.getElementById("outputText");
         if (!outputText.value) return;
 
-        // ★GitHubのサイバー効果音を再生！
         const audio = new Audio("cyber-.mp3"); 
         audio.play().catch(e => console.log("Audio play error:", e));
 
@@ -249,6 +316,58 @@
                 toast.classList.remove("show");
             }, 2000);
         });
+    }
+
+   // 🌸 3. ★超軽量・行単位の差分高速検出ロジック（フリーズゼロ仕様！）
+    function compareCodes() {
+        const oldText = document.getElementById("oldCode").value;
+        const newText = document.getElementById("newCode").value;
+        const viewer = document.getElementById("diffViewer");
+
+        if (!oldText && !newText) {
+            viewer.innerHTML = "Paste codes above to detect differences...";
+            return;
+        }
+
+        const oldLines = oldText.split("\n");
+        const newLines = newText.split("\n");
+
+        let resultHtml = "";
+        const maxLines = Math.max(oldLines.length, newLines.length);
+
+        for (let i = 0; i < maxLines; i++) {
+            const oldLine = oldLines[i];
+            const newLine = newLines[i];
+
+            if (oldLine === newLine) {
+                // 変更なし（そのまま表示）
+                if (newLine !== undefined) {
+                    resultHtml += escapeHtml(newLine) + "\n";
+                }
+            } else {
+                // 削除された行（ピンク）
+                if (oldLine !== undefined) {
+                    resultHtml += `<span class="diff-removed">- ${escapeHtml(oldLine)}</span>\n`;
+                }
+                // 追加・変更された行（グリーン）
+                if (newLine !== undefined) {
+                    resultHtml += `<span class="diff-added">+ ${escapeHtml(newLine)}</span>\n`;
+                }
+            }
+        }
+
+        viewer.innerHTML = resultHtml || "完全一致（差分なし）";
+    }
+
+
+    // エスケープ処理（HTMLタグの崩れ防止）
+    function escapeHtml(str) {
+        return str
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
     }
 </script>
 
