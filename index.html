@@ -251,7 +251,41 @@
         </div>
     </div>
 
-    <!-- 1. 変換＆文字数抽出カード -->
+    <div class="converter-card">
+        <div class="header-title">SYSTEM CODE: SEQUENCE GENERATOR</div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+            <div>
+                <label>▼ 生成行数 (COUNT)</label>
+                <input type="number" id="seqCount" value="10" min="1" max="1000" style="width:100%; background:rgba(10,3,18,0.5); border:1px solid #ba55d3; border-radius:6px; color:#00ffcc; padding:8px; box-sizing:border-box; font-family:'Consolas',monospace;">
+            </div>
+            <div>
+                <label>▼ 開始番号 (START)</label>
+                <input type="number" id="seqStart" value="1" min="0" style="width:100%; background:rgba(10,3,18,0.5); border:1px solid #ba55d3; border-radius:6px; color:#00ffcc; padding:8px; box-sizing:border-box; font-family:'Consolas',monospace;">
+            </div>
+            <div>
+                <label>▼ 加算モード (MODE)</label>
+                <select id="seqMode" style="width:100%; background:rgba(10,3,18,0.5); border:1px solid #ba55d3; border-radius:6px; color:#00ffcc; padding:8px; box-sizing:border-box; font-family:'Consolas',monospace;">
+                    <option value="all">全数字を加算 (+1)</option>
+                    <option value="last">最後の数字のみ加算</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="field-group">
+            <label>▼ 雛形テンプレート (TEMPLATE TEXT)</label>
+            <textarea id="seqTemplate" style="height: 70px;" placeholder="例: .photo1 { background: url('photo1.webp') center/cover no-repeat; }" oninput="generateSequence()"></textarea>
+        </div>
+
+        <div class="field-group">
+            <label>▼ 生成結果 (GENERATED SEQUENCE)</label>
+            <textarea id="seqResult" readonly style="height: 150px;" placeholder="ここに連番コードが爆速生成されます..."></textarea>
+        </div>
+
+        <button class="btn-copy" onclick="copySequenceToClipboard()">GENERATED CODE COPY TO CLIPBOARD</button>
+    </div>
+
+    <!-- 1. 🌸変換＆文字数抽出カード 🌸-->
     <div class="converter-card">
         <div class="header-title">SYSTEM CODE: UPPERCASE CONVERTER</div>
 
@@ -368,6 +402,66 @@
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
+    }
+
+    // 🌸 4. ★新機能：連番テキスト大量自動生成魔法！
+    function generateSequence() {
+        const template = document.getElementById("seqTemplate").value;
+        const count = parseInt(document.getElementById("seqCount").value) || 10;
+        const start = parseInt(document.getElementById("seqStart").value) || 1;
+        const mode = document.getElementById("seqMode").value;
+        const resultArea = document.getElementById("seqResult");
+
+        if (!template) {
+            resultArea.value = "";
+            return;
+        }
+
+        let outputLines = [];
+
+        for (let i = 0; i < count; i++) {
+            let currentLine = template;
+            
+            if (mode === "all") {
+                // 🌸 全ての数字を同じ数だけ同時に増やす魔法！
+                currentLine = currentLine.replace(/\d+/g, (match) => {
+                    const baseNum = parseInt(match);
+                    return baseNum + i;
+                });
+            } else if (mode === "last") {
+                // 🌸 最後の数字だけを加算する魔法！
+                const matches = [...currentLine.matchAll(/\d+/g)];
+                if (matches.length > 0) {
+                    const lastMatch = matches[matches.length - 1];
+                    const baseNum = parseInt(lastMatch[0]);
+                    const newNum = baseNum + i;
+                    const index = lastMatch.index;
+                    currentLine = currentLine.substring(0, index) + newNum + currentLine.substring(index + lastMatch[0].length);
+                }
+            }
+
+            outputLines.push(currentLine);
+        }
+
+        resultArea.value = outputLines.join("\n");
+    }
+
+    // イベントリスナー（設定変更時にもリアルタイム再計算）
+    document.getElementById("seqCount").addEventListener("input", generateSequence);
+    document.getElementById("seqStart").addEventListener("input", generateSequence);
+    document.getElementById("seqMode").addEventListener("change", generateSequence);
+
+    // 連番コピー用
+    function copySequenceToClipboard() {
+        const seqResult = document.getElementById("seqResult");
+        if (!seqResult.value) return;
+
+        const audio = new Audio("cyber-.mp3"); 
+        audio.play().catch(e => console.log("Audio play error:", e));
+
+        navigator.clipboard.writeText(seqResult.value).then(() => {
+            //alert("SYSTEM: 連番コードをクリップボードにコピーしました！");//アミちゃん、このアラートはいらないから消したよ
+        });
     }
 </script>
 
