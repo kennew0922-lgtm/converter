@@ -353,6 +353,7 @@
         </div>
 
         <button class="btn-copy" onclick="copySequenceToClipboard()" style="font-size: 0.8rem; display: block;">GENERATED CODE COPY TO CLIPBOARD</button>
+        <div class="toast" id="toastMsgken">SYSTEM: COPIED TO CLIPBOARD!</div><!-- アミちゃん　こっちにも足したよ　何故こっちはアラートを -->
         <br>
     </div>
 
@@ -533,7 +534,7 @@
     document.getElementById("seqStart").addEventListener("input", generateSequence);
     document.getElementById("seqMode").addEventListener("change", generateSequence);
 
-    // 連番コピー用（ケンくんの教材用コメントアウトもしっかり継承！）
+    // 連番コピー用（ケンくんの教材用コメントアウトもしっかり継承！）←継承ありがと　ただね……アラートより謎なコードに……(-_-;)
     function copySequenceToClipboard() {
         const seqResult = document.getElementById("seqResult");
         if (!seqResult.value) return;
@@ -541,7 +542,13 @@
         const audio = new Audio("cyber-.mp3"); 
         audio.play().catch(e => console.log("Audio play error:", e));
 
+        /*ここ追加　これでCONVERTERと同じメッセージがでるです アミちゃん、最初のコードカッコ良くしてたのに何でこっちはダサいアラートだすようにしたの？？？？？？？*/
         navigator.clipboard.writeText(seqResult.value).then(() => {
+            const toast = document.getElementById("toastMsgken");
+            toast.classList.add("show");
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 2000);
             //alert("SYSTEM: 連番コードをクリップボードにコピーしました！");//アミちゃん、このアラートはいらないから消したよ
         });
     }
