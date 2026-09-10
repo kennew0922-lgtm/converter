@@ -90,7 +90,7 @@
 
         /* 🟣 ツールカード基本定義 */
         .converter-card {
-            width: 640px;
+            width: 700px;
             max-width: 92vw;
             background: rgba(20, 8, 35, 0.85);
             border: 2px solid #9370db;
@@ -247,7 +247,7 @@
             line-height: 1.5;
             white-space: pre-wrap;
             word-break: break-all;
-            max-height: 300px;
+            max-height: 220px;
             overflow-y: auto;
             box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.9);
             color: #a0a0a0;
@@ -349,10 +349,11 @@
 
         <div class="field-group">
             <label>▼ 生成結果 (GENERATED SEQUENCE)</label>
-            <textarea id="seqResult" readonly style="height: 150px;" placeholder="ここに連番コードが爆速生成されます..."></textarea>
+            <textarea id="seqResult" readonly style="height: 195px;" placeholder="ここに連番コードが爆速生成されます..."></textarea>
         </div>
 
-        <button class="btn-copy" onclick="copySequenceToClipboard()">GENERATED CODE COPY TO CLIPBOARD</button>
+        <button class="btn-copy" onclick="copySequenceToClipboard()" style="font-size: 0.8rem; display: block;">GENERATED CODE COPY TO CLIPBOARD</button>
+        <br>
     </div>
 
     <div id="panel-upper" class="converter-card">
