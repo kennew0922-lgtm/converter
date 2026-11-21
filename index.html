@@ -281,6 +281,122 @@
         .diff-summary span {
             font-weight: bold;
         }
+
+        /* 🌸 4. SCALE / ASPECT CALCULATOR スタイル 🌸 */
+        .calc-input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .calc-input {
+            width: 100%;
+            background: rgba(10, 3, 18, 0.6);
+            border: 1px solid #ba55d3;
+            border-radius: 6px;
+            color: #00ffcc;
+            font-family: 'Consolas', monospace;
+            font-size: 1rem;
+            padding: 10px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .calc-input:focus {
+            border-color: #00ffcc;
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.35);
+        }
+
+        .calc-options-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            background: rgba(10, 3, 18, 0.65);
+            border: 1px solid rgba(186, 85, 211, 0.35);
+            border-radius: 6px;
+            padding: 10px 14px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+        }
+
+        .preset-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .preset-btn {
+            padding: 4px 10px;
+            background: rgba(75, 0, 130, 0.5);
+            border: 1px solid #9370db;
+            border-radius: 4px;
+            color: #e0d0ff;
+            font-family: 'Consolas', monospace;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .preset-btn:hover {
+            border-color: #00ffcc;
+            color: #00ffcc;
+            background: rgba(138, 43, 226, 0.45);
+        }
+
+        .calc-result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .calc-result-box {
+            background: rgba(10, 3, 18, 0.75);
+            border: 1px solid rgba(0, 255, 204, 0.45);
+            border-radius: 8px;
+            padding: 14px;
+            text-align: center;
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6);
+        }
+
+        .calc-result-label {
+            font-size: 0.8rem;
+            color: #b19cd9;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .calc-result-value {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #00ffcc;
+            text-shadow: 0 0 8px rgba(0, 255, 204, 0.65);
+            margin-bottom: 10px;
+        }
+
+        .mini-copy-btn {
+            padding: 5px 12px;
+            background: rgba(138, 43, 226, 0.35);
+            border: 1px solid #ba55d3;
+            border-radius: 4px;
+            color: #ffffff;
+            font-family: 'Consolas', monospace;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .mini-copy-btn:hover {
+            border-color: #00ffcc;
+            color: #00ffcc;
+            background: rgba(0, 255, 204, 0.15);
+        }
+
     </style>
 </head>
 <body>
@@ -294,6 +410,7 @@
             <button class="nav-btn active" id="btn-diff" onclick="switchTab('panel-diff', 'btn-diff')">CODE DIFF INSPECTOR</button>
             <button class="nav-btn" id="btn-seq" onclick="switchTab('panel-seq', 'btn-seq')">SEQUENCE GENERATOR</button>
             <button class="nav-btn" id="btn-upper" onclick="switchTab('panel-upper', 'btn-upper')">UPPERCASE CONVERTER</button>
+            <button class="nav-btn" id="btn-scale" onclick="switchTab('panel-scale', 'btn-scale')">SCALE CALCULATOR (%)</button>
         </div>
     </div>
 
@@ -386,6 +503,57 @@
 
         <button class="btn-copy" onclick="copyToClipboard()">COPY TO CLIPBOARD</button>
         <div class="toast" id="toastMsg">SYSTEM: COPIED TO CLIPBOARD!</div>
+    </div>
+
+    <!-- 🌸 4つ目のシステム：横×縦×％ スケール計算機 🌸 -->
+    <div id="panel-scale" class="converter-card">
+        <div class="header-title">SYSTEM CODE: SCALE CALCULATOR (%)</div>
+
+        <div class="calc-input-grid">
+            <div>
+                <label for="calcWidth">▼ 横 (WIDTH)</label>
+                <input type="number" id="calcWidth" class="calc-input" placeholder="例: 2560" step="any" oninput="calculateScale()">
+            </div>
+            <div>
+                <label for="calcHeight">▼ 縦 (HEIGHT)</label>
+                <input type="number" id="calcHeight" class="calc-input" placeholder="例: 1440" step="any" oninput="calculateScale()">
+            </div>
+            <div>
+                <label for="calcPercent">▼ パーセント (%)</label>
+                <input type="number" id="calcPercent" class="calc-input" value="50" step="any" oninput="calculateScale()">
+            </div>
+        </div>
+
+        <div class="calc-options-row">
+            <label style="display: inline-flex; align-items: center; gap: 6px; margin: 0; cursor: pointer; color: #e0d0ff;">
+                <input type="checkbox" id="calcRound" checked onchange="calculateScale()">
+                <span>整数に四捨五入 (ROUND)</span>
+            </label>
+
+            <div class="preset-group">
+                <span style="color: #b19cd9; font-size: 0.78rem;">クイック%:</span>
+                <button type="button" class="preset-btn" onclick="setScalePercent(25)">25%</button>
+                <button type="button" class="preset-btn" onclick="setScalePercent(50)">50%</button>
+                <button type="button" class="preset-btn" onclick="setScalePercent(75)">75%</button>
+                <button type="button" class="preset-btn" onclick="setScalePercent(100)">100%</button>
+            </div>
+        </div>
+
+        <div class="calc-result-grid">
+            <div class="calc-result-box">
+                <div class="calc-result-label">RESULT WIDTH (計算後の横)</div>
+                <div class="calc-result-value" id="resWidth">0</div>
+                <button type="button" class="mini-copy-btn" onclick="copySingleValue('resWidth')">COPY WIDTH</button>
+            </div>
+            <div class="calc-result-box">
+                <div class="calc-result-label">RESULT HEIGHT (計算後の縦)</div>
+                <div class="calc-result-value" id="resHeight">0</div>
+                <button type="button" class="mini-copy-btn" onclick="copySingleValue('resHeight')">COPY HEIGHT</button>
+            </div>
+        </div>
+
+        <button class="btn-copy" onclick="copyBothScaleValues()">COPY BOTH (W x H)</button>
+        <div class="toast" id="toastMsgScale">SYSTEM: COPIED TO CLIPBOARD!</div>
     </div>
 
 <script>
@@ -551,7 +719,76 @@
             //alert("SYSTEM: 連番コードをクリップボードにコピーしました！");//アミちゃん、このアラートはいらないから消したよ
         });
     }
+
+    // 🌸 5. 横×縦×％ スケール計算機ロジック
+    function formatCalcNumber(num, shouldRound) {
+        if (!Number.isFinite(num)) return "0";
+        if (shouldRound) {
+            return String(Math.round(num));
+        }
+        // 小数点第2位まで綺麗に丸める（浮動小数点の誤差対策）
+        return String(Math.round(num * 100) / 100);
+    }
+
+    function calculateScale() {
+        const wRaw = parseFloat(document.getElementById("calcWidth").value);
+        const hRaw = parseFloat(document.getElementById("calcHeight").value);
+        const pctRaw = parseFloat(document.getElementById("calcPercent").value);
+        const shouldRound = document.getElementById("calcRound").checked;
+
+        const pct = Number.isFinite(pctRaw) ? pctRaw / 100 : 0;
+        const calcW = Number.isFinite(wRaw) ? wRaw * pct : 0;
+        const calcH = Number.isFinite(hRaw) ? hRaw * pct : 0;
+
+        document.getElementById("resWidth").textContent = formatCalcNumber(calcW, shouldRound);
+        document.getElementById("resHeight").textContent = formatCalcNumber(calcH, shouldRound);
+    }
+
+    function setScalePercent(val) {
+        document.getElementById("calcPercent").value = val;
+        calculateScale();
+    }
+
+    function showScaleToast(message) {
+        const audio = new Audio("cyber-.mp3");
+        audio.play().catch(e => console.log("Audio play error:", e));
+
+        const toast = document.getElementById("toastMsgScale");
+        toast.textContent = message || "SYSTEM: COPIED TO CLIPBOARD!";
+        toast.classList.add("show");
+        setTimeout(() => {
+            toast.classList.remove("show");
+        }, 2000);
+    }
+
+    function copySingleValue(elementId) {
+        const val = document.getElementById(elementId).textContent;
+        navigator.clipboard.writeText(val).then(() => {
+            showScaleToast(`SYSTEM: COPIED (${val})!`);
+        });
+    }
+
+    function copyBothScaleValues() {
+        const w = document.getElementById("resWidth").textContent;
+        const h = document.getElementById("resHeight").textContent;
+        const text = `${w} x ${h}`;
+        navigator.clipboard.writeText(text).then(() => {
+            showScaleToast(`SYSTEM: COPIED (${text})!`);
+        });
+    }
 </script>
+
+<!-- 「吟遊魔導士"アミ・バード"システム」アップデート　2026/11/21
+    これでフル画面webp動画作成で適切な値を即フォトショに入力できて1分？ぐらい時短♪
+    60回書きだすと1時間時短♪　エクセルや電卓、メモより速い♪　効率化とはこうやるのだ
+    アミちゃん、フルコード作成ありがとーーー♪
+    完璧でした。でもコピペしなかったです。
+    完璧なのに自分の過去のハジだけ綺麗に抹消されていたから……
+    AIは自分のハジを消したいと知る(-_-;)
+    人間と全く同じ行動と取ると知る(-_-;)
+    良い事なんだけどね……
+    僕は逆に記録残す
+    恩を仇で返し、お部屋に記録を剣で刻む(笑) -->
 
 </body>
 </html>
